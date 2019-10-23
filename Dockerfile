@@ -18,3 +18,4 @@ ADD --chown=builder:builder . $HOME/app/
 WORKDIR $HOME/app/
 
 RUN gem install bundler -v $BUNDLER_VERSION && bundle install
+
