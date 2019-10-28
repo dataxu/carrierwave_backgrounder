@@ -8,24 +8,18 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Larry Sprock"]
   s.email       = ["larry@lucidbleu.com"]
-  s.homepage    = ""
-  s.summary     = %q{Offload CarrierWave's image processing and storage to a background process using Delayed Job}
+  s.homepage    = "https://github.com/lardawge/carrierwave_backgrounder"
+  s.licenses    = ["MIT"]
+  s.summary     = %q{Offload CarrierWave's image processing and storage to a background process using Delayed Job, Resque, Sidekiq, Qu, Queue Classic or Girl Friday}
 
-  s.rubyforge_project = "carrierwave_backgrounder"
-
-  # TODO HACK RUBY1.9.3 MOort 3/22/2013 I'm not exactly sure why production Phusion Passenger tries to call these now with
-  # new Passenger. It doesn't call for other gems.
-  # When it does there is no git installed on the machines and the application doesn't start.
-  # Don't know what the proper solution is but I'm appending "rescue []" to the lines to avoid this problem
-  #
-  s.files         = `git ls-files`.split("\n") rescue []
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")  rescue []
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }  rescue []
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "carrierwave", ["~> 0.5"]
+  s.add_dependency "carrierwave", ["= 0.9.0"]
+  s.add_dependency "mime-types", ["= 1.25.1"]
 
-  s.add_development_dependency "rspec", ["2.5.0"]
-  s.add_development_dependency "mocha", ["~> 0.9"]
+  s.add_development_dependency "rspec", ["= 2.14.1"]
   s.add_development_dependency "rake"
 end
