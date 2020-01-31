@@ -75,7 +75,7 @@ pipeline {
         }*/
         stage('Build & Push Gem') {
             when {
-                expression { env.BRANCH_NAME == 'master' }
+                expression { env.BRANCH_NAME ==~ /master|rel\-.*/ }
             }
             steps {
                 sh """
