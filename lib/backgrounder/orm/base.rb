@@ -38,7 +38,10 @@ module CarrierWave
         #     add_column :users, :avatar_processing, :boolean
         #   end
         #
-        def process_in_background(column, worker=::CarrierWave::Workers::ProcessAsset)
+        def process_in_background(column, *args)
+          options = args.extract_options!
+          worker = options[:worker]
+          worker ||= ::CarrierWave::Workers::ProcessAsset
           send :before_save, :"set_#{column}_processing", :if => :"trigger_#{column}_background_processing?"
           send :after_save,  :"enqueue_#{column}_background_job", :if => :"trigger_#{column}_background_processing?"
 
@@ -50,7 +53,7 @@ module CarrierWave
             end
 
             def enqueue_#{column}_background_job
-              CarrierWave::Backgrounder.enqueue_for_backend(#{worker}, self.class.name, id.to_s, #{column}.mounted_as)
+              CarrierWave::Backgrounder.enqueue_for_backend(#{worker}, self.class.name, id.to_s, #{column}.mounted_as, '#{options[:queue]}')
             end
 
             def trigger_#{column}_background_processing?
@@ -82,7 +85,10 @@ module CarrierWave
         #     store_in_background :avatar, CustomWorker
         #   end
         #
-        def store_in_background(column, worker=::CarrierWave::Workers::StoreAsset)
+        def store_in_background(column, *args)
+          options = args.extract_options!
+          worker = options[:worker]
+          worker ||= ::CarrierWave::Workers::StoreAsset
           send :after_save, :"enqueue_#{column}_background_job", :if => :"trigger_#{column}_background_storage?"
 
           class_eval  <<-RUBY, __FILE__, __LINE__ + 1
@@ -98,7 +104,7 @@ module CarrierWave
             end
 
             def enqueue_#{column}_background_job
-              CarrierWave::Backgrounder.enqueue_for_backend(#{worker}, self.class.name, id.to_s, #{column}.mounted_as)
+              CarrierWave::Backgrounder.enqueue_for_backend(#{worker}, self.class.name, id.to_s, #{column}.mounted_as, '#{options[:queue]}')
             end
 
             def trigger_#{column}_background_storage?

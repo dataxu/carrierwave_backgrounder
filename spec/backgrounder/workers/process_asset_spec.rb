@@ -4,8 +4,8 @@ require 'backgrounder/workers/process_asset'
 
 describe CarrierWave::Workers::ProcessAsset do
   let(:worker_class) { CarrierWave::Workers::ProcessAsset }
-  let(:user)   { mock('User') }
-  let(:image)  { mock('UserAsset') }
+  let(:user)   { double('User') }
+  let(:image)  { double('UserAsset') }
   let!(:worker) { worker_class.new(user, '22', :image) }
 
   context ".perform" do
